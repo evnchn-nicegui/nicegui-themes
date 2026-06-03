@@ -277,7 +277,7 @@ For each major design decision, what evidence invalidates it:
 **Done this session** (two waves):
 
 *Wave 1* (16:30):
-- DESIGN.md initial draft + project skeleton + brutalist Tier 1 v0.0.1.
+- DESIGN.md initial design spec + project skeleton + brutalist Tier 1 v0.0.1.
 - Demo ran; visual verification at `~/rich-renders/nicegui-themes-brutalist-v0.0.1-2026-06-02.png` — 80% Tier 1 working; Dragon #7 (SVG controls) discovered.
 
 *Wave 2* (21:00) — Dragon #7 slain via basecoat-hack #5608 formalisation:
