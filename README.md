@@ -2,7 +2,7 @@
 
 Curated shape-pass themes for [NiceGUI](https://nicegui.io) — performance hygiene, embedded-display friendly, WCAG-AAA contrast where it counts.
 
-> **Status**: design phase + v0.0.1 scaffold. Not yet on PyPI.
+> **Status**: v0.0.1 · pre-PyPI · brutalist Tier 1 shipped, more tiers in flight.
 
 ```python
 import nicegui_themes
@@ -22,4 +22,4 @@ See `DESIGN.md` for the strategic frame (wedge, distribution stages, falsifiable
 
 ## Aspirational gallery
 
-Mockups only — file a PR to promote one to a real theme: phosphor (CRT terminal), synthwave (neon), clay (soft pastel), editorial (magazine).
+Aspirational — file a PR to promote one to a shipped theme: phosphor (CRT terminal), synthwave (neon), clay (soft pastel), editorial (magazine).
