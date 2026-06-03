@@ -7,7 +7,7 @@ Render-cost theory solid (1-layer hard-offset shadow vs Quasar Material's
 Tier 1 surface: button, card, input/number/textarea, select, toggle/switch/
 checkbox/radio, slider, chip, label.
 
-Tier 2 surface (table, dialog, tabs, expansion, progress, list, menu) — TODO.
+Tier 2 surface (table, dialog, tabs, expansion, progress, list, menu) lands in the next wave.
 """
 from nicegui import ui
 
