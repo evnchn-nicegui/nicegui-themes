@@ -250,7 +250,34 @@ For each major design decision, what evidence invalidates it:
 
 > **UPDATE THIS SECTION EVERY SESSION. Leave a clean handoff for the next session.**
 
-### 11.1 Now (2026-06-02 ~22:15 HKT) — wave 6
+### 11.1 Now (2026-06-03 ~15:50 HKT) — wave 7
+
+**Wave 7 — palette regression caught + fixed**:
+- evnchn flagged: brutalist v0.0.5 was overriding NiceGUI's palette (custom `#2b2bff` primary, `#ffe600` accent, cream `#faf7e8` body). That violates §1.2 — palette is explicitly out of scope. Brutalist is supposed to be **shape only** on top of whatever palette `ui.colors()` / Quasar defaults provide.
+- Refactored `src/nicegui_themes/brutalist.py`:
+  - **Removed `ui.colors(...)` call entirely** — no palette override.
+  - Removed body background override (Quasar default white in light mode).
+  - Removed card background override (Quasar default white).
+  - Truthy fills (checkbox/radio bg, toggle knob-on, slider thumb) now use `var(--q-primary)` instead of hardcoded `#2b2bff`.
+  - Focus ring uses `var(--q-accent)` instead of hardcoded `#ffe600`.
+  - Checkmark / radio dot use white (legible on every Quasar default primary).
+  - Borders/shadows: only hardcoded colour is `#000`, exposed via CSS custom property `--ng-brutalist-border` for dark-mode overrides.
+- Verified live: `--q-primary` reads `#1976D2`, `--q-secondary` `#26A69A`, `--q-accent` `#9C27B0` — all Quasar defaults. Screenshot at `~/rich-renders/nicegui-themes-brutalist-v0.0.6-palette-native-2026-06-03.png` shows primary button Material blue, secondary teal, accent purple, slider thumb blue.
+- Implication for AAA contrast claim (§7.1): the 7.26:1 number was computed against MY palette (`#2b2bff`). With Quasar default `#1976D2`, white-on-primary contrast is ~4.5:1 (just above AA, below AAA). **The AAA claim was tied to a palette override that no longer happens — needs reframing or dropping in §7.1.**
+
+**evnchn decisions closed earlier this session**:
+- License: **MIT** · Import style: **eager** · Repo: **private created**, push done, squash-to-public later
+- Dragon #7 strategy: **@layer overrides trick — done, JS observer dropped**
+- Dashboard refresh: **no, current "are we winning" is fine**
+- Memory: **triage at end, candidates written to `~/rich-renders/nicegui-themes-memory-candidates-2026-06-02.md`**
+
+**Not yet** (carry to next session):
+- Reframe AAA contrast claim in §7.1 (was tied to palette override that's now gone).
+- modern-flat / glass / paper implementations.
+- Tier 2 elements.
+- Console-warn machinery.
+
+### 11.0 Previous wave snapshot (2026-06-02 ~22:15 HKT) — wave 6
 
 **Wave 6 — pure-CSS Dragon #7 (the `@layer overrides` trick)**:
 - evnchn corrected the framing: NiceGUI behaves *layered > unlayered*; among layers, LATER wins. (Standard advice he gives in GH discussions; not a spec quirk so much as NiceGUI's chosen cascade behavior, which is why Quasar's last-declared layer is named `quasar_importants`.)
@@ -317,4 +344,5 @@ For each major design decision, what evidence invalidates it:
 2026-06-02 — Claude (Opus 4.7) — Wave 4: evnchn pushed back on the vsync-bound null result. Built bench/perf_metrics.py using non-vsync-bound metrics (CDP Performance.getMetrics for cumulative LayoutDuration/RecalcStyleDuration + CDP Memory.getDOMCounters + sync forced-reflow loops). RESULTS: brutalist genuinely cheaper at layout (−5.4% per sync reflow, −14.6ms cumulative, −130 DOM nodes at 30 cards) but identical at paint. Trade: +0.5MB heap + 5KB CSS. Pitch RESTORED but reshaped: "leaner layout" not "cheaper paint". See §7.2 for the corrected framing.
 2026-06-02 — Claude (Opus 4.7) — Wave 5: locked framing A (performance hygiene) + added low-res / embedded-display legibility angle to §7.2 + new §7.3. Keywords threaded for agent + SEO discoverability (Raspberry Pi, I2C/SPI, industrial HMI, kiosk, embedded display, performance hygiene). Brutalist's public framing now covers four angles: aesthetic launch wow + WCAG-AAA contrast + measurable layout-cost hygiene + low-res legibility. None overclaiming.
 2026-06-02 — Claude (Opus 4.7) — Wave 6: evnchn corrected the cascade framing — in NiceGUI layered > unlayered; LATER layer wins (which is why Quasar's last layer is `quasar_importants`). Applied `@layer overrides` wrap to both `ensure_icon_font_fix()` and `enable_svg_control_replacement()` in `_common.py`. Dropped the JS observer entirely; pure CSS now slays Dragon #7. Verified via brutalist v0.0.5 screenshot at `~/rich-renders/nicegui-themes-brutalist-v0.0.5-2026-06-02.png` (visually identical to v0.0.4, confirming the CSS path works). Documented `@layer overrides` as the canonical NiceGUI theme-override pattern in §4 Dragon #7. Also: evnchn answered all 6 dashboard decisions (MIT, eager, private repo + squash, @layer for dragon, no dashboard refresh, memory to disk).
+2026-06-03 — Claude (Opus 4.7) — Wave 7: evnchn caught palette regression — brutalist v0.0.5 was overriding NiceGUI's palette (custom blue/yellow/cream) which violates §1.2 (palette out of scope). Refactored `brutalist.py` to be SHAPE-only: dropped `ui.colors(...)`, dropped body+card bg overrides, switched truthy fills to `var(--q-primary)`, focus ring to `var(--q-accent)`, checkmark ink to white. Only hardcoded colour now is `#000` for borders (exposed via `--ng-brutalist-border` CSS variable for dark-mode opt-out). Verified at v0.0.6: Quasar Material blue primary, teal secondary, purple accent all visible. Screenshot at `~/rich-renders/nicegui-themes-brutalist-v0.0.6-palette-native-2026-06-03.png`. Side-effect: AAA contrast claim (§7.1) was tied to the overridden #2b2bff palette and no longer holds against Quasar default #1976D2 (4.5:1, just-above-AA). Flagged for reframing in §11.1.
 ```

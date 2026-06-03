@@ -1,8 +1,21 @@
 """Brutalist theme — Tier 1 coverage.
 
-Verified WCAG-AAA: white text on #2b2bff = 7.26:1 contrast (see DESIGN.md §7.1).
-Render-cost theory solid (1-layer hard-offset shadow vs Quasar Material's
-3-layer alpha-blended elevation); benchmark pending.
+**SHAPE ONLY.** Per DESIGN.md §1.2: palette is explicitly out of scope for
+`nicegui-themes`. Brutalist paints thick black borders, zero radius, and hard
+offset shadows ON TOP OF whatever palette NiceGUI's `ui.colors()` defaults
+provide — Quasar Material blue (#1976D2) primary by default, the user's
+choice if they've called `ui.colors(...)` themselves. The shape is the
+theme; the palette stays NiceGUI's.
+
+Border/structure colors are taken from a NiceGUI-aware accent vocabulary:
+- Border lines + body chrome: `#000` (brutalist signature; the only hardcoded
+  colour). In dark-mode contexts a user can override `--ng-brutalist-border`
+  to white.
+- Truthy fills (checkbox bg, radio bg, toggle knob-on, slider thumb):
+  `var(--q-primary)` — respects the live NiceGUI palette.
+- Active focus ring: `var(--q-accent)` — same.
+- Truthy checkmark / radio dot ink: `white` (legible on every Quasar default
+  primary).
 
 Tier 1 surface: button, card, input/number/textarea, select, toggle/switch/
 checkbox/radio, slider, chip, label.
@@ -14,18 +27,14 @@ from nicegui import ui
 from nicegui_themes._common import enable_svg_control_replacement, ensure_icon_font_fix
 
 
-# Verified AAA palette. Do not change without re-running contrast math.
-_PRIMARY = '#2b2bff'
-_SECONDARY = '#111111'
-_ACCENT = '#ffe600'
-_BODY_BG = '#faf7e8'
-_CARD_BG = '#ffffff'
-_BORDER = '#000000'
+# The only hardcoded colour in this theme — overridable via CSS custom property
+# `--ng-brutalist-border` if the user needs it (e.g. dark mode).
+_BORDER = 'var(--ng-brutalist-border, #000)'
 
 
 def apply() -> None:
-    """Apply the brutalist Tier 1 shape pass to the current NiceGUI app."""
-    ui.colors(primary=_PRIMARY, secondary=_SECONDARY, accent=_ACCENT)
+    """Apply the brutalist Tier 1 shape pass. Palette stays NiceGUI's native."""
+    # NOTE: no `ui.colors(...)` call. Palette is out of scope per DESIGN.md §1.2.
 
     ui.add_head_html(
         '<link rel="preconnect" href="https://fonts.googleapis.com">'
@@ -34,15 +43,15 @@ def apply() -> None:
     )
 
     ui.add_css(f'''
-        /* Typography + body */
+        /* Typography — note: no body background override; let NiceGUI native paint it */
         body {{
-            background: {_BODY_BG};
             font-family: "Space Grotesk", sans-serif;
         }}
 
-        /* Card — Dragon #2: kill hover-elevate by pinning the shadow */
+        /* Card — Dragon #2: kill hover-elevate by pinning the shadow.
+           NOTE: no card background override; Quasar default white in light mode,
+           dark grey in dark mode — brutalist border + shadow keeps it distinct. */
         .q-card {{
-            background: {_CARD_BG} !important;
             border: 3px solid {_BORDER};
             border-radius: 0;
             box-shadow: 7px 7px 0 {_BORDER} !important;
@@ -74,15 +83,14 @@ def apply() -> None:
             border: 2.5px solid {_BORDER};
             border-radius: 0;
             padding: 0 10px;
-            background: {_CARD_BG};
         }}
 
-        /* Focus ring — Dragon #3 */
+        /* Focus ring — Dragon #3.  Uses Quasar's live accent variable. */
         .q-btn:focus-visible,
         .q-field--focused .q-field__control,
         .q-checkbox:focus-within .q-checkbox__inner,
         .q-radio:focus-within .q-radio__bg {{
-            outline: 3px solid {_ACCENT};
+            outline: 3px solid var(--q-accent);
             outline-offset: 2px;
         }}
 
@@ -91,20 +99,19 @@ def apply() -> None:
             border-radius: 0;
         }}
 
-        /* Dragon #7 aesthetic layer.
-           Display/positioning baseline (incl. !important fights with Quasar's .hidden)
-           handled unlayered by enable_svg_control_replacement(). Below is pure brutalist
-           paint — normal cascade, `nicegui` layer wins over `quasar` for non-!important. */
+        /* Dragon #7 aesthetic layer.  Display/positioning baseline handled by
+           enable_svg_control_replacement() (in @layer overrides).  Below is
+           pure brutalist paint — palette-respecting, only borders are black. */
 
-        /* Checkbox — square, yellow check on blue when truthy */
+        /* Checkbox — square box, q-primary fill on truthy, white check mark */
         .q-checkbox__inner > .q-checkbox__native {{
             width: 20px; height: 20px;
             border: 2.5px solid {_BORDER};
-            background: {_CARD_BG};
             border-radius: 0;
         }}
         .q-checkbox__inner--truthy > .q-checkbox__native {{
-            background: {_PRIMARY};
+            background: var(--q-primary);
+            border-color: var(--q-primary);
         }}
         .q-checkbox__inner > .q-checkbox__native::after {{
             content: '';
@@ -112,7 +119,7 @@ def apply() -> None:
             position: absolute;
             top: 50%; left: 50%;
             width: 5px; height: 10px;
-            border: solid {_ACCENT};
+            border: solid white;
             border-width: 0 3px 3px 0;
             transform: translate(-50%, -60%) rotate(45deg);
             opacity: 0;
@@ -121,15 +128,15 @@ def apply() -> None:
             opacity: 1;
         }}
 
-        /* Radio — square (no circles in brutalism), accent dot on truthy */
+        /* Radio — square (no circles), q-primary fill on truthy, white dot */
         .q-radio__inner > .q-radio__native {{
             width: 20px; height: 20px;
             border: 2.5px solid {_BORDER};
-            background: {_CARD_BG};
             border-radius: 0;
         }}
         .q-radio__inner--truthy > .q-radio__native {{
-            background: {_PRIMARY};
+            background: var(--q-primary);
+            border-color: var(--q-primary);
         }}
         .q-radio__inner > .q-radio__native::after {{
             content: '';
@@ -138,7 +145,7 @@ def apply() -> None:
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 8px; height: 8px;
-            background: {_ACCENT};
+            background: white;
             opacity: 0;
         }}
         .q-radio__inner--truthy > .q-radio__native::after {{
@@ -149,7 +156,6 @@ def apply() -> None:
         .q-toggle__inner > .q-toggle__native {{
             width: 44px; height: 22px;
             border: 2.5px solid {_BORDER};
-            background: {_CARD_BG};
             border-radius: 0;
         }}
         .q-toggle__inner > .q-toggle__native::before {{
@@ -163,7 +169,7 @@ def apply() -> None:
         }}
         .q-toggle__inner--truthy > .q-toggle__native::before {{
             left: calc(100% - 16px);
-            background: {_PRIMARY};
+            background: var(--q-primary);
         }}
 
         /* Chip */
@@ -181,7 +187,7 @@ def apply() -> None:
         }}
         .q-slider__thumb {{
             border-radius: 0;
-            background: {_PRIMARY} !important;
+            background: var(--q-primary) !important;
             border: 2.5px solid {_BORDER};
         }}
     ''')
