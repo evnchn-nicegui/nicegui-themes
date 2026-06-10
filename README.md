@@ -2,7 +2,7 @@
 
 Curated shape-pass themes for [NiceGUI](https://nicegui.io) — performance hygiene, embedded-display friendly, WCAG-AAA contrast where it counts.
 
-> **Status**: v0.0.1 · pre-PyPI · brutalist Tier 1 shipped, more tiers in flight.
+> **Status**: v0.0.2 · pre-PyPI · brutalist Tier 1 shipped (shape-only, palette-respecting), more tiers in flight.
 
 ```python
 import nicegui_themes

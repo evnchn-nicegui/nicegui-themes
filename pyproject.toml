@@ -1,6 +1,6 @@
 [project]
 name = "nicegui-themes"
-version = "0.0.1"
+version = "0.0.2"
 description = "Curated shape-pass themes for NiceGUI"
 authors = [{name = "Evan Chan", email = "evan@nicegui.io"}]
 license = {text = "MIT"}
